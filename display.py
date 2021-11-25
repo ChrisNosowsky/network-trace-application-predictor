@@ -13,11 +13,12 @@ import datetime
 
 
 class Display:
-    def __init__(self, proc_time, save=False):
+    def __init__(self, proc_time, history, save=False):
         self.proc_time = proc_time
+        self.history = history
         self.save = save
 
-    def display_results(self, history):
+    def display_results(self):
         """
         Displays prediction results in a chart
 
@@ -53,6 +54,6 @@ class Display:
         plt.ylabel('Accuracy')
         plt.legend()
         if self.save:
-            fig_file_name = datetime.datetime.now().strftime('figs/accuracy_' + self.proc_time + '.png')
+            fig_file_name = datetime.datetime.now().strftime('./figs/accuracy_' + self.proc_time + '.png')
             plt.savefig(fig_file_name)
         plt.show()
