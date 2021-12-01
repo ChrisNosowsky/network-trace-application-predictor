@@ -12,6 +12,6 @@ from mi_reader import MIReader
 
 if __name__ == '__main__':
     print("Running Cellular Network Trace Application...")
-    mi = MIReader()
-    mi.offline_analyzer()
+    # mi = MIReader()
+    # mi.offline_analyzer()
 
