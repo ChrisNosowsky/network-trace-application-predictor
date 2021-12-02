@@ -1,0 +1,2 @@
+log_msg_len,type_id,timestamp,Version,Num SubPkt,Subpacket ID,Subpacket Version,Subpacket Size,Reason,Max Size RBs,Number of Released RBs,Released RBs,Released RB Cfg Index,Released RB Cfg Index,Released RB Cfg Index,Released RB Cfg Index,Number of Added/Modified RBs,Added/Modified RBs,Number of Active RBs,Active RBs
+56,LTE_RLC_UL_Config_Log_Packet,2021-11-29 23:19:25.177889,1,1,69,1,40,RB Release,10,4,,33,34,4,5,0,,0,

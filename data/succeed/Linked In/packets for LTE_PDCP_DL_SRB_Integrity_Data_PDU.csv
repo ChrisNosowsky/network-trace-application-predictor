@@ -1,0 +1,4 @@
+log_msg_len,type_id,timestamp,Version,Num SubPkt,PDU Size,Msg
+148,LTE_PDCP_DL_SRB_Integrity_Data_PDU,2021-11-29 19:32:08.308189,1,1,71,
+148,LTE_PDCP_DL_SRB_Integrity_Data_PDU,2021-11-29 19:32:28.991850,1,1,71,
+92,LTE_PDCP_DL_SRB_Integrity_Data_PDU,2021-11-29 19:32:27.451260,1,1,13,

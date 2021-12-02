@@ -1,0 +1,2 @@
+log_msg_len,type_id,timestamp,Version,Cell ID,Downlink frequency,Uplink frequency,Downlink bandwidth,Uplink bandwidth,Cell Identity,TAC,Band Indicator,MCC,MNC Digit,MNC,Allowed Access
+41,LTE_RRC_Serv_Cell_Info,2021-11-29 20:41:31.794516,3,202,977,18977,15 MHz,15 MHz,5914892,42751,2,310,3,260,0

@@ -1,0 +1,3 @@
+log_msg_len,type_id,timestamp,Version,Physical Cell ID,Freq,SFN,Number of Antenna,DL BW
+23,LTE_RRC_MIB_Packet,2021-11-29 04:00:01.988990,2,202,977,768,4,15 MHz
+23,LTE_RRC_MIB_Packet,2021-11-29 04:01:22.843337,2,118,977,660,4,15 MHz
