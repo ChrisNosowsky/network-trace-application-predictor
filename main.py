@@ -22,6 +22,7 @@ def load_data(dataPath):
     return X_train, X_test, Y_train, Y_test
 
 if __name__ == '__main__':
+  print("Running Cellular Network Trace Application...")
     X_train, X_test, Y_train, Y_test = load_data("./data/Master_LTE_RRC_OTA_Packet_updated.xlsx")
     clf = svm.SVC(kernel='poly')
     scaler = preprocessing.StandardScaler().fit(X_train)

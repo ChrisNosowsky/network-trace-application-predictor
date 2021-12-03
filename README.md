@@ -72,3 +72,19 @@ Extra Considerations:
 
 link for more: https://sensortower.com/ios/rankings/top/iphone/us/all-categories?date=2021-11-27
 
+
+Labels example input:
+[10, 11, 2, 20, 19, 1, 4, 6, 9, etc.] having each number map to an application
+
+Data example features:
+[App name, MAC_Subpacket_Size, MAC_Subpacket_Sample_Count, MAC_BSR, MAC_Grant_Received, MAC_Grant_Utilized, etc.]
+
+Example format:
+[['Airbnb', 1, 1, 10, 192, 84, 90],
+['Walmart', 10, 6, 24, 2, 25, 96],
+['Snapchat', 12, 245, 500, 9, 4, 0]]
+
+After encoding:
+[[1, 1, 1, 10, 192, 84, 90],
+[11, 10, 6, 24, 2, 25, 96],
+[6, 12, 245, 500, 9, 4, 0]]
