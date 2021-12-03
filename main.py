@@ -12,6 +12,7 @@ import pandas as pd
 from openpyxl import *
 from sklearn import svm, preprocessing
 
+
 def load_data(dataPath):
     print("Loading data..")
     data = pd.read_excel(dataPath)
@@ -21,9 +22,11 @@ def load_data(dataPath):
     print("loaded " + str(len(X_train)) + " training examples and " + str(len(X_test)) + " test examples")
     return X_train, X_test, Y_train, Y_test
 
+
 if __name__ == '__main__':
-  print("Running Cellular Network Trace Application...")
+    print("Running Cellular Network Trace Application...")
     X_train, X_test, Y_train, Y_test = load_data("./data/Master_LTE_RRC_OTA_Packet_updated.xlsx")
+
     clf = svm.SVC(kernel='poly')
     scaler = preprocessing.StandardScaler().fit(X_train)
     X_scaled = scaler.transform(X_train)

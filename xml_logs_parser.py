@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 import glob
 import pandas as pd
 
+
 def get_unique_packet_types(directory_path):
     unique_types = []
     logfiles = glob.glob(directory_path + "/*")

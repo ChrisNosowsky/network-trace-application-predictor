@@ -61,7 +61,7 @@ def preprocess(directory, packet_type):
     print("final dimensions")
     print(len(data.columns))
     print(len(data))
-preprocess("C:/Users/hamza/PycharmProjects/network-trace-application-predictor/data/succeed", "LTE_RRC_OTA_Packet")
+preprocess("C:/Users/Racec/PycharmProjects/network-trace-application-predictor/data/succeed", "LTE_RRC_OTA_Packet")
 
 # data = pd.read_csv('Master_LTE_PHY_PDCCH_PHICH_Indication_Report.csv')
 # object_cols = data.select_dtypes(include="object").columns
