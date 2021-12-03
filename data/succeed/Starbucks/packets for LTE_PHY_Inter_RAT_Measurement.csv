@@ -1,0 +1,4 @@
+log_msg_len,type_id,timestamp
+100,LTE_PHY_Inter_RAT_Measurement,2021-11-29 20:10:50.133931
+100,LTE_PHY_Inter_RAT_Measurement,2021-11-29 20:11:08.424076
+100,LTE_PHY_Inter_RAT_Measurement,2021-11-29 20:10:50.380241

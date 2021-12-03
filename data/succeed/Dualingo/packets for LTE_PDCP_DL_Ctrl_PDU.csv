@@ -1,0 +1,4 @@
+log_msg_len,type_id,timestamp,Version,Num Subpkt,Subpacket ID,Subpacket Version,Subpacket Size,RB Cfg Idx,Mode,SN Length (bit),Num PDUs,PDCP DL Ctrl PDU,PDU Size,Logged Bytes,sys fn,sub fn,PDU Type,fms,DC,type
+40,LTE_PDCP_DL_Ctrl_PDU,2021-11-29 19:58:39.066443,1,1,194,24,24,6,(MI)Unknown,12,1,,7,7,676,1,(MI)Unknown,245,0,STATUS REPORT
+40,LTE_PDCP_DL_Ctrl_PDU,2021-11-29 19:58:39.184241,1,1,194,24,24,6,(MI)Unknown,12,1,,7,7,687,9,(MI)Unknown,245,0,STATUS REPORT
+40,LTE_PDCP_DL_Ctrl_PDU,2021-11-29 19:58:55.625268,1,1,194,24,24,6,(MI)Unknown,12,1,,7,7,284,0,(MI)Unknown,245,0,STATUS REPORT

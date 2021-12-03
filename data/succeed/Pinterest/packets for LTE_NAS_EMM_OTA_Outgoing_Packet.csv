@@ -1,0 +1,2 @@
+log_msg_len,type_id,timestamp,Pkt Version,RRC Release Number,Major Version,Minor Version,Msg
+20,LTE_NAS_EMM_OTA_Outgoing_Packet,2021-11-29 19:20:04.511464,1,9,5,0,

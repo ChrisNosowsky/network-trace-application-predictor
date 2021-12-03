@@ -1,0 +1,2 @@
+log_msg_len,type_id,timestamp,Version,Num Subpkt,Subpacket ID,Subpacket Version,Subpacket Size,Reason,SRB Cipher Algorithm,SRB Cipher Key Idx,SRB Integrity Algorithm,SRB Integrity Key Idx,DRB Cipher Algorithm,DRB Cipher Key Idx,Array size,Number of Released RBs,Released RBs,Released RB Cfg Index,Released RB Cfg Index,Released RB Cfg Index,Released RB Cfg Index,Number of Added/Modified RBs,Added/Modified RBs,Number of active RBs,Active RBs
+64,LTE_PDCP_DL_Config,2021-11-29 18:07:34.110031,1,1,192,24,48,RB Release,None,9,None,8,None,8,10,4,,33,34,4,5,0,,0,

@@ -1,0 +1,2 @@
+log_msg_len,type_id,timestamp,Pkt Version,RRC Release Number,Major/minor,Radio Bearer ID,Physical Cell ID,Freq,SysFrameNum/SubFrameNum,PDU Number,SIB Mask in SI,Msg Length,Msg
+46,LTE_RRC_OTA_Packet,2021-11-29 18:42:51.010729,20,14,48,0,349,66586,8393,5,0,15,

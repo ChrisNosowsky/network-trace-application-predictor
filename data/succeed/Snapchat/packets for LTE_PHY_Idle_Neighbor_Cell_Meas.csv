@@ -1,0 +1,4 @@
+log_msg_len,type_id,timestamp,Version,Number of SubPackets,SubPackets,SubPacket ID,Version,SubPacket Size,E-ARFCN,Num Cells,Num Rx Ant,Deplexing Mode,Neighbor Cells,Cell ID,CP Type,Enabled Tx Antennas,TTL Enabled,FTL Enabled,SubPacket ID,Version,SubPacket Size,E-ARFCN,Num Cells,Deplexing Mode,Serving Cell Index,Neighbor Cells,Physical Cell ID,FTL Cumulative Freq Offset,Inst Measured RSRP,Inst Measured RSRQ,Inst Measured RSSI
+108,LTE_PHY_Idle_Neighbor_Cell_Meas,2021-11-29 18:09:08.748020,1,2,,26,2,28,40072,1,2,TDD,,352,Normal,2,True,True,27,4,64,40072,1,TDD,PCell,,352,0,-125.1875,-14.125,-102.0
+108,LTE_PHY_Idle_Neighbor_Cell_Meas,2021-11-29 18:09:08.788017,1,2,,26,2,28,40072,1,2,TDD,,352,Normal,2,True,True,27,4,64,40072,1,TDD,PCell,,352,0,-123.0625,-13.875,-100.1875
+108,LTE_PHY_Idle_Neighbor_Cell_Meas,2021-11-29 18:09:08.828018,1,2,,26,2,28,40072,1,2,TDD,,352,Normal,2,True,True,27,4,64,40072,1,TDD,PCell,,352,0,-124.25,-13.8125,-101.4375

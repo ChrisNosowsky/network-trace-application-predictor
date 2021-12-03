@@ -2,7 +2,6 @@ import xml.etree.ElementTree as ET
 import glob
 import pandas as pd
 
-
 def get_unique_packet_types(directory_path):
     unique_types = []
     logfiles = glob.glob(directory_path + "/*")
@@ -34,9 +33,7 @@ def get_packets_with_type(packet_type, directory_path):
         for packet in packets:
             for children in packet:
                 if children.get("key") == "type_id":
-                    # if children.text not in unique_types:
-                    #     unique_types.append(children.text)
-                    if children.text in unique_types and children.text == packet_type:
+                    if children.text == packet_type:
                         target_packets.append(packet)
     return target_packets
 
