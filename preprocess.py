@@ -40,7 +40,9 @@ def preprocess(directory, packet_type):
     unique_columns = data.nunique()
     cols_to_drop = unique_columns[unique_columns == 1].index
     data.drop(columns=cols_to_drop, axis=1, inplace=True)
-    data.drop(columns=["log_msg_len","timestamp"], inplace = True)
+    # print(data.head())
+    # data.drop(columns=["log_msg_len","timestamp"], inplace = True)
+    data.drop(columns=["timestamp"], inplace=True)
     # there might be one type of app that has a lot of empty values on a specific column, might fill instead
     print("number of packets for each app before removing empty rows ")
     print(apps_data_len)
@@ -61,7 +63,7 @@ def preprocess(directory, packet_type):
     print("final dimensions")
     print(len(data.columns))
     print(len(data))
-preprocess("C:/Users/Racec/PycharmProjects/network-trace-application-predictor/data/succeed", "LTE_RRC_OTA_Packet")
+preprocess("C:/Users/Racec/PycharmProjects/network-trace-application-predictor/data/succeed", "LTE_MAC_UL_Tx_Statistics")
 
 # data = pd.read_csv('Master_LTE_PHY_PDCCH_PHICH_Indication_Report.csv')
 # object_cols = data.select_dtypes(include="object").columns
