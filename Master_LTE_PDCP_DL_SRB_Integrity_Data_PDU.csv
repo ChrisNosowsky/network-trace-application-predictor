@@ -1,0 +1,139 @@
+log_msg_len,PDU Size,label
+84,7,airbnb
+84,8,airbnb
+224,147,airbnb
+84,7,airbnb
+84,7,airbnb
+84,7,airbnb
+92,13,airbnb
+84,7,airbnb
+84,7,airbnb
+84,7,airbnb
+84,7,airbnb
+148,71,airbnb
+84,8,airbnb
+224,147,airbnb
+84,7,airbnb
+92,13,airbnb
+84,7,airbnb
+92,13,airbnb
+84,8,airbnb
+224,147,airbnb
+84,7,airbnb
+92,13,airbnb
+224,147,airbnb
+84,7,airbnb
+92,13,airbnb
+84,8,Amazon Shopping
+224,147,Amazon Shopping
+84,7,Amazon Shopping
+92,13,Amazon Shopping
+84,7,Amazon Shopping
+84,7,Amazon Shopping
+100,23,Amazon Shopping
+84,8,doordash
+224,147,doordash
+84,7,doordash
+92,13,doordash
+84,8,doordash
+224,147,doordash
+84,7,doordash
+108,32,doordash
+84,7,doordash
+84,8,doordash
+208,132,doordash
+84,7,doordash
+92,13,doordash
+84,7,doordash
+84,8,doordash
+224,147,doordash
+84,7,doordash
+92,13,doordash
+84,7,doordash
+84,8,doordash
+224,147,doordash
+84,7,doordash
+92,13,doordash
+84,7,doordash
+92,13,doordash
+84,7,doordash
+84,7,Google Maps
+84,8,Google Maps
+224,147,Google Maps
+84,7,Google Maps
+96,17,Google Maps
+84,7,Google Maps
+148,71,Linked In
+148,71,Linked In
+92,13,Linked In
+84,7,Macys
+84,7,Macys
+96,17,Macys
+84,8,Macys
+224,147,Macys
+84,7,Macys
+92,13,Macys
+84,8,Macys
+208,132,Macys
+84,7,Macys
+92,13,Macys
+84,7,Macys
+84,8,Macys
+224,147,Macys
+84,7,Macys
+84,7,New York Post
+108,30,New York Post
+152,75,New York Post
+84,7,Pinterest
+92,13,Pinterest
+84,7,Snapchat
+156,80,Snapchat
+84,7,Snapchat
+108,32,Starbucks
+84,7,Starbucks
+84,7,Starbucks
+96,17,Starbucks
+84,8,Starbucks
+224,147,Starbucks
+84,7,Starbucks
+92,13,Starbucks
+84,7,Twitch
+84,8,Twitch
+208,132,Twitch
+84,7,Twitch
+152,75,Twitch
+92,13,Walmart
+96,17,Walmart
+152,75,Walmart
+84,7,Walmart
+84,8,Walmart
+208,132,Walmart
+84,7,Walmart
+100,24,Walmart
+92,13,Youtube
+84,7,Youtube
+84,7,Youtube
+84,7,Youtube
+156,78,Youtube
+200,121,Youtube
+84,7,Youtube
+84,8,Youtube
+224,147,Youtube
+84,7,Youtube
+200,121,Youtube
+84,8,Youtube
+228,151,Youtube
+84,7,Youtube
+92,13,Youtube
+184,107,Youtube
+200,121,Youtube
+84,7,Youtube
+84,8,Youtube
+228,151,Youtube
+84,7,Youtube
+140,62,Youtube
+84,7,Youtube
+84,8,Youtube
+232,154,Youtube
+84,7,Youtube
+92,13,Youtube
