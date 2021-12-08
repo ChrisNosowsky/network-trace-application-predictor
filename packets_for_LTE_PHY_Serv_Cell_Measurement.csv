@@ -1,2 +1,0 @@
-log_msg_len,type_id,timestamp,Version,Number of SubPackets,Subpackets
-540,LTE_PHY_Serv_Cell_Measurement,2021-11-29 19:06:45.345300,1,1,"[{'SubPacket ID': 25.0, 'SubPacket Version': 36.0, 'SubPacket Size': 524.0, 'E-ARFCN': 66586.0, 'Num-of-cells': 1.0, 'Physical Cell ID': 349.0, 'Serving Cell Index': 'PCell', 'Is Serving Cell': 1.0, 'Current SFN': 598.0, 'Current Subframe Number': 7.0, 'RSRP Rx[0]': -109.8125, 'RSRP Rx[1]': -116.25, 'RSRP': -109.8125, 'RSRQ Rx[0]': -12.9375, 'RSRQ Rx[1]': -12.125, 'RSRQ': -12.9375}]"
