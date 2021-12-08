@@ -8,11 +8,11 @@
 # Main script to run our application
 # ==============================================================================
 from network import Network
-
+import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     print("Running Cellular Network Trace Application...")
-    # path = "./data/Master_LTE_PDCP_DL_Stats.xlsx"
+    #path = "./data/Master_LTE_PDCP_DL_Stats.xlsx"
     path = "./data/Master_LTE_PDCP_UL_Stats.xlsx"
     # path = "./data/Master_LTE_RRC_OTA_Packet_updated.xlsx"
     # path = "./data/Master_LTE_MAC_UL_Tx_Statistics.xlsx"
@@ -27,13 +27,12 @@ if __name__ == '__main__':
     # Please see all_accuracy.xlsx for list of accuracies I got
     # Best one I got: LTE_PDCP_UL_Stats
     n = Network()
+    histories = []
     print("========LOGISTIC REGRESSION========")
-    n.logistic_regression(path)
+    #n.logistic_regression(path)
     print("========SVM========")
-    n.SVM_model(path)
+    #n.SVM_model(path)
     print("========KERAS========")
-    n.keras_model(path)
-    print("========LINEAR REGRESSION========")
-    n.linear_regression(path)
+    #dense_history = n.keras_model(path)
     print("========XG BOOST========")
-    n.xg_boost(path)
+    xgboost_history = n.xg_boost(path)

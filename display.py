@@ -26,34 +26,34 @@ class Display:
                     history (Any): History from the model
         """
 
-        loss = history.history['loss']
-        val_loss = history.history['val_loss']
+        loss = self.history.history['loss']
+        val_loss = self.history.history['val_loss']
 
         epochs = range(1, len(loss) + 1)
-
-        plt.plot(epochs, loss, 'bo', label='Training loss')
-        plt.plot(epochs, val_loss, 'b', label='Validation loss')
-        plt.title('Training and validation loss')
+        plt.clf()
+        plt.plot(epochs, loss, 'b-', label='Training loss')
+        plt.plot(epochs, val_loss, 'r-', label='Validation loss')
+        plt.title('Fully connected Neural Network training and validation loss')
         plt.xlabel('Epochs')
         plt.ylabel('Loss')
         plt.legend()
         if self.save:
             fig_file_name = datetime.datetime.now().strftime('figs/loss_' + self.proc_time + '.png')
             plt.savefig(fig_file_name)
-        plt.show()
+        #plt.show()
 
         plt.clf()
 
-        acc = history.history['accuracy']
-        val_acc = history.history['val_accuracy']
+        acc = self.history.history['accuracy']
+        val_acc = self.history.history['val_accuracy']
 
-        plt.plot(epochs, acc, 'bo', label='Training acc')
-        plt.plot(epochs, val_acc, 'b', label='Validation acc')
-        plt.title('Training and validation accuracy')
+        plt.plot(epochs, acc, 'b-', label='Training acc')
+        plt.plot(epochs, val_acc, 'r-', label='Validation acc')
+        plt.title('Fully connected Neural Network training and validation accuracy')
         plt.xlabel('Epochs')
         plt.ylabel('Accuracy')
         plt.legend()
         if self.save:
             fig_file_name = datetime.datetime.now().strftime('./figs/accuracy_' + self.proc_time + '.png')
             plt.savefig(fig_file_name)
-        plt.show()
+        #plt.show()
