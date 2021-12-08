@@ -15,6 +15,13 @@ import glob
 from sklearn.datasets import load_breast_cancer
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+# service = ['airbnb', 'doordash']
+shopping = ['Amazon Shopping', 'Walmart', 'McDonalds', 'Macys', 'Zilow', 'doordash', 'airbnb']
+tools = ['Google Chrome', 'Google Maps', 'Google Play', 'Gmail']
+entertainment = ['Twitch', 'Youtube', 'Imdb']
+social = ['Twitter', 'Snapchat', 'Reddit', 'Pinterest', 'New York Post', 'Linked In']
+
 def preprocess(directory, packet_type):
     pd.set_option('display.max_rows', 10000)
     pd.set_option('display.max_columns', 500000)
@@ -29,7 +36,17 @@ def preprocess(directory, packet_type):
         except:
             print("The following apps didn't have this packet " + folder.split("/")[-1].split('\\')[-1])
             continue
-        data.insert(len(data.columns), "label", folder.split("/")[-1].split('\\')[-1])
+        # if folder.split("/")[-1].split('\\')[-1] in service:
+        #     data.insert(len(data.columns), "label", "SERVICE")
+        if folder.split("/")[-1].split('\\')[-1] in tools:
+            data.insert(len(data.columns), "label", "TOOLS")
+        if folder.split("/")[-1].split('\\')[-1] in shopping:
+            data.insert(len(data.columns), "label", "SHOPPING")
+        if folder.split("/")[-1].split('\\')[-1] in entertainment:
+            data.insert(len(data.columns), "label", "ENTERTAINMENT")
+        if folder.split("/")[-1].split('\\')[-1] in social:
+            data.insert(len(data.columns), "label", "SOCIAL")
+        # data.insert(len(data.columns), "label", folder.split("/")[-1].split('\\')[-1])
         apps_data_len.append("len for " + str(folder) + " " + str(len(data)))
         frames.append(data)
 
@@ -58,26 +75,25 @@ def preprocess(directory, packet_type):
     for label in data.label.unique():
         print(label + " " + str((data.label == label).sum()))
 
-
-
-    #drop duplicated columns, non here
+    # drop duplicated columns, non here
     data = data.loc[:, ~data.columns.duplicated()]
-    #data.to_csv('Master_' + packet_type + '.csv', index=False)
+    # data.to_csv('Master_TEST2_' + packet_type + '.csv', index=False)
+    # data.to_csv('Master_' + packet_type + '.csv', index=False)
     print("final dimensions")
     print(len(data.columns))
     print(len(data))
 
-    corr = data.corr()
-    # visualise the data with seaborn
-    mask = np.triu(np.ones_like(corr, dtype=bool))
-    sns.set_style(style='white')
-    f, ax = plt.subplots(figsize=(20,20))
-    cmap = sns.diverging_palette(10, 250, as_cmap=True)
-    sns.heatmap(corr, mask=mask, cmap=cmap,
-                square=True,
-                linewidths=.5, cbar_kws={"shrink": .5}, ax=ax)
-    plt.show()
-preprocess("C:/Users/hamza/PycharmProjects/network-trace-application-predictor/data/succeed", "LTE_PDCP_UL_Stats")
+    # corr = data.corr()
+    # # visualise the data with seaborn
+    # mask = np.triu(np.ones_like(corr, dtype=bool))
+    # sns.set_style(style='white')
+    # f, ax = plt.subplots(figsize=(20,20))
+    # cmap = sns.diverging_palette(10, 250, as_cmap=True)
+    # sns.heatmap(corr, mask=mask, cmap=cmap,
+    #             square=True,
+    #             linewidths=.5, cbar_kws={"shrink": .5}, ax=ax)
+    # plt.show()
+preprocess("C:/Users/FZTHWP/PycharmProjects/network-trace-application-predictor/data/succeed", "LTE_PDCP_UL_Stats")
 
 # data = pd.read_csv('Master_LTE_PHY_PDCCH_PHICH_Indication_Report.csv')
 # object_cols = data.select_dtypes(include="object").columns

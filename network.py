@@ -25,6 +25,10 @@ from xgboost import XGBClassifier
 import matplotlib.pyplot as plt
 from keras.regularizers import L1L2
 from tensorflow.keras.layers.experimental import RandomFourierFeatures
+from keras.wrappers.scikit_learn import KerasClassifier
+from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+
 
 class Network:
 
@@ -32,6 +36,8 @@ class Network:
         self.proc_time = datetime.datetime.now().strftime('%b_%d_%Y_%H_%M')
         self.save_model = save_model
         self.save_plot = save_plot
+        self.num_features = 0
+        self.num_classes = 0
 
     @staticmethod
     def load_data_pandas(dataPath):
@@ -42,6 +48,7 @@ class Network:
         Y = data['label']
         # print(X)
         X = data.drop(['label'], axis=1, inplace=False)
+        # X = data.drop(data.columns[[1, 69]], axis=1, inplace=True)
         # Adjust the random_state if you are getting a Dimensions must be equal error (I use 7 first few, 3 for RLC_UL)
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=5)
         # print(X_train)
@@ -111,6 +118,23 @@ class Network:
         plt.savefig("SVM accuracy")
         #plt.show()
         return
+
+    def SVM_model2(self, path):
+        X_train, X_test, Y_train, Y_test = self.load_data_pandas(path)
+
+        clf = svm.SVC(kernel='poly', C=1, probability=True)
+
+        scaler = preprocessing.StandardScaler().fit(X_train)
+        X_scaled = scaler.transform(X_train)
+
+        clf.fit(X_scaled, Y_train)
+
+        X_test_scaled = scaler.transform(X_test)
+
+        y_pred = clf.predict(X_test_scaled)
+        print(accuracy_score(Y_test, y_pred))
+        # accuracy, best I got is 0.336 PogChamp
+        print((y_pred == Y_test).sum() / len(Y_test))
 
     @staticmethod
     def perform_grid_search_logistic_regression(train_data, train_labels, test_data, test_labels):
@@ -240,6 +264,45 @@ class Network:
         plt.show()
         return history
 
+    def logistic_regression2(self, path):
+        X_train, X_test, Y_train, Y_test = self.load_data_pandas(path)
+        train_data, train_labels, test_data, test_labels = self.load_data_numpy(X_train, X_test, Y_train, Y_test)
+
+        train_labels, test_labels = self.encode_data(train_labels, test_labels)
+        # train_labels, test_labels = self.one_hot_encode(train_labels, test_labels)
+        train_data, test_data = self.normalize_data(train_data, test_data)
+
+        # To do grid search, just uncomment below
+        # self.perform_grid_search_logistic_regression(train_data, train_labels, test_data, test_labels)
+
+        model = LogisticRegression(solver='newton-cg', penalty='l2', C=1.0)
+        model.fit(train_data, train_labels)
+        importance = model.coef_[0]
+        # summarize feature importance
+        for i, v in enumerate(importance):
+            print('Feature: %0d, Score: %.5f' % (i, v))
+        print(model.score(test_data, test_labels))
+
+    def logistic_regression3(self, path):
+        X_train, X_test, Y_train, Y_test = self.load_data_pandas(path)
+        train_data, train_labels, test_data, test_labels = self.load_data_numpy(X_train, X_test, Y_train, Y_test)
+
+        train_labels, test_labels = self.encode_data(train_labels, test_labels)
+        # train_labels, test_labels = self.one_hot_encode(train_labels, test_labels)
+        train_data, test_data = self.normalize_data(train_data, test_data)
+
+        # To do grid search, just uncomment below
+        # self.perform_grid_search_logistic_regression(train_data, train_labels, test_data, test_labels)
+
+        model = DecisionTreeClassifier()
+        model.fit(train_data, train_labels)
+        importance = model.feature_importances_
+        # summarize feature importance
+        for i, v in enumerate(importance):
+            print('Feature: %0d, Score: %.5f' % (i, v))
+        print(model.score(test_data, test_labels))
+
+
     def xg_boost(self, path):
         X_train, X_test, Y_train, Y_test = self.load_data_pandas(path)
         train_data, train_labels, test_data, test_labels = self.load_data_numpy(X_train, X_test, Y_train, Y_test)
@@ -263,34 +326,46 @@ class Network:
                               scale_pos_weight=1,
                               seed=27)
 
-        # MAC BEST BELOW
-        # model = XGBClassifier(learning_rate=0.01,
-        #                       n_estimators=500,
-        #                       max_depth=4,
-        #                       min_child_weight=1,
-        #                       gamma=1,
-        #                       subsample=0.8,
-        #                       colsample_bytree=0.8,
-        #                       objective='binary:logistic',
-        #                       nthread=4,
-        #                       scale_pos_weight=1,
-        #                       seed=27)
+        # # MAC BEST BELOW
+        # # model = XGBClassifier(learning_rate=0.01,
+        # #                       n_estimators=500,
+        # #                       max_depth=4,
+        # #                       min_child_weight=1,
+        # #                       gamma=1,
+        # #                       subsample=0.8,
+        # #                       colsample_bytree=0.8,
+        # #                       objective='binary:logistic',
+        # #                       nthread=4,
+        # #                       scale_pos_weight=1,
+        # #                       seed=27)
         evalset = [(train_data, train_labels), (test_data, test_labels)]
         model.fit(train_data, train_labels, eval_metric = "mlogloss", eval_set=evalset)
         score = model.score(test_data, test_labels)
         print('XGBoost Score: {}%'.format(round(score * 100, 2)))
-        # retrieve performance metrics
-        results = model.evals_result()
-        # plot learning curves
-        plt.clf()
-        plt.title('XGBoost training and validation loss')
-        plt.plot(results['validation_0']['mlogloss'], label='train')
-        plt.plot(results['validation_1']['mlogloss'], label='test')
-        # show the legend
-        plt.legend()
-        plt.savefig("XGBoost loss")
-        #plt.show()
-        # show the plot
+        importance = model.feature_importances_
+        # summarize feature importance
+        for i, v in enumerate(importance):
+            print('Feature: %0d, Score: %.5f' % (i, v))
+        # # retrieve performance metrics
+        # results = model.evals_result()
+        # # plot learning curves
+        # plt.clf()
+        # plt.title('XGBoost training and validation loss')
+        # plt.plot(results['validation_0']['mlogloss'], label='train')
+        # plt.plot(results['validation_1']['mlogloss'], label='test')
+        # # show the legend
+        # plt.legend()
+        # plt.savefig("XGBoost loss")
+        # #plt.show()
+        # # show the plot
+
+    def build_model(self, batch_size, nb_epoch):
+        model = Sequential()
+        model.add(tf.keras.layers.Dense(128, input_shape=(self.num_features,), activation='relu'))
+        model.add(tf.keras.layers.Dense(64, activation='relu'))
+        model.add(tf.keras.layers.Dense(self.num_classes, activation='softmax'))
+        model.compile(loss='mse', optimizer='rmsprop', metrics=['accuracy'])
+        return model
 
     def keras_model(self, path):
         X_train, X_test, Y_train, Y_test = self.load_data_pandas(path)
@@ -300,25 +375,31 @@ class Network:
         train_labels, test_labels = self.one_hot_encode(train_labels, test_labels)
         train_data, test_data = self.normalize_data(train_data, test_data)
 
-        num_features = len(train_data[0])
-        num_classes = len(train_labels[0])
+        self.num_features = len(train_data[0])
+        self.num_classes = len(train_labels[0])
         # model = tf.keras.Sequential(tf.keras.layers.Dense(64, activation=tf.nn.relu,
         #                                                   input_shape=(
-        #                                                       num_features,)))
+        #                                                       self.num_features,)))
         # model.add(tf.keras.layers.Dense(32, activation='relu'))
         # # model.add(tf.keras.layers.Dropout(0.5))
         # model.add(tf.keras.layers.Dense(1, activation=tf.nn.sigmoid))
-        # # optimizer = tf.keras.optimizers.Adam(lr=0.01)
         model = Sequential()
-        model.add(tf.keras.layers.Dense(128, input_shape=(num_features,), activation='relu'))
-        model.add(tf.keras.layers.Dense(64, activation='relu'))
-        model.add(tf.keras.layers.Dense(num_classes, activation='softmax'))
+        model.add(tf.keras.layers.Dense(256, input_shape=(self.num_features,), activation='relu'))
+        model.add(tf.keras.layers.Dense(32, activation='relu'))
+        model.add(tf.keras.layers.Dense(self.num_classes, activation='softmax'))
         model.compile(loss='mse', optimizer='rmsprop', metrics=['accuracy'])
 
         try:
+            # batch_size = [10, 20, 40, 60, 80, 100]
+            # epochs = [10, 20]
+            # param_grid = dict(batch_size=batch_size, nb_epoch=epochs)
+            # k_model = KerasClassifier(build_fn=self.build_model, verbose=0)
+            # clf = GridSearchCV(k_model, param_grid=param_grid,
+            #                     verbose=True, n_jobs=-1, scoring='accuracy', error_score=0)
+            # clf.fit(train_data, train_labels)
+
             history = model.fit(train_data,
                                 train_labels,
-                                validation_split=0.2,
                                 epochs=500,  # Keep low for now
                                 batch_size=512)
             acc = history.history['accuracy'][-1]
@@ -333,17 +414,17 @@ class Network:
                                         batch_size=512)
             print('Fully connected NN Test loss:', score)
             print('Fully connected NN Test accuracy:', acc)
-            if self.save_model:
-                print("Saving trained model..")
-                model_file_name = datetime.datetime.now().strftime('./models/model_'
-                                                                   + self.proc_time + '.h5')
-                model.save(model_file_name)
-                print("Saved successful!")
-
-            # Uncomment below to graph model performance
-            d = Display(proc_time=self.proc_time, history=history, save=True)
-            d.display_results()
-            return history
+            # if self.save_model:
+            #     print("Saving trained model..")
+            #     model_file_name = datetime.datetime.now().strftime('./models/model_'
+            #                                                        + self.proc_time + '.h5')
+            #     model.save(model_file_name)
+            #     print("Saved successful!")
+            #
+            # # Uncomment below to graph model performance
+            # d = Display(proc_time=self.proc_time, history=history, save=True)
+            # d.display_results()
+            # return history
         except ValueError as e:
             logging.exception(e)
 
