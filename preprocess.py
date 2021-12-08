@@ -12,6 +12,9 @@
 import pandas as pd
 import numpy as np
 import glob
+from sklearn.datasets import load_breast_cancer
+import matplotlib.pyplot as plt
+import seaborn as sns
 def preprocess(directory, packet_type):
     pd.set_option('display.max_rows', 10000)
     pd.set_option('display.max_columns', 500000)
@@ -59,11 +62,22 @@ def preprocess(directory, packet_type):
 
     #drop duplicated columns, non here
     data = data.loc[:, ~data.columns.duplicated()]
-    data.to_csv('Master_' + packet_type + '.csv', index=False)
+    #data.to_csv('Master_' + packet_type + '.csv', index=False)
     print("final dimensions")
     print(len(data.columns))
     print(len(data))
-preprocess("C:/Users/Racec/PycharmProjects/network-trace-application-predictor/data/succeed", "LTE_RRC_Serv_Cell_Info")
+
+    corr = data.corr()
+    # visualise the data with seaborn
+    mask = np.triu(np.ones_like(corr, dtype=bool))
+    sns.set_style(style='white')
+    f, ax = plt.subplots(figsize=(20,20))
+    cmap = sns.diverging_palette(10, 250, as_cmap=True)
+    sns.heatmap(corr, mask=mask, cmap=cmap,
+                square=True,
+                linewidths=.5, cbar_kws={"shrink": .5}, ax=ax)
+    plt.show()
+preprocess("C:/Users/hamza/PycharmProjects/network-trace-application-predictor/data/succeed", "LTE_PDCP_UL_Stats")
 
 # data = pd.read_csv('Master_LTE_PHY_PDCCH_PHICH_Indication_Report.csv')
 # object_cols = data.select_dtypes(include="object").columns

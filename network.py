@@ -10,20 +10,21 @@
 
 import logging
 import datetime
-import numpy as np
-import tensorflow as tf
 from display import Display
-from keras import models, layers, optimizers
+import tensorflow as tf
+from tensorflow.keras import Sequential
+from sklearn.model_selection import validation_curve
 from sklearn.model_selection import train_test_split
 import pandas as pd
-from openpyxl import *
 from sklearn import svm, preprocessing
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, StandardScaler, MultiLabelBinarizer
 from sklearn.metrics import accuracy_score, r2_score
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.model_selection import GridSearchCV
 from xgboost import XGBClassifier
-
+import matplotlib.pyplot as plt
+from keras.regularizers import L1L2
+from tensorflow.keras.layers.experimental import RandomFourierFeatures
 
 class Network:
 
@@ -42,7 +43,7 @@ class Network:
         # print(X)
         X = data.drop(['label'], axis=1, inplace=False)
         # Adjust the random_state if you are getting a Dimensions must be equal error (I use 7 first few, 3 for RLC_UL)
-        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=7)
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=5)
         # print(X_train)
         print("loaded " + str(len(X_train)) + " training examples and " + str(len(X_test)) + " test examples")
         return X_train, X_test, Y_train, Y_test
@@ -57,20 +58,59 @@ class Network:
 
     def SVM_model(self, path):
         X_train, X_test, Y_train, Y_test = self.load_data_pandas(path)
+        train_data, train_labels, test_data, test_labels = self.load_data_numpy(X_train, X_test, Y_train, Y_test)
+        train_labels, test_labels = self.encode_data(train_labels, test_labels)
+        train_labels, test_labels = self.one_hot_encode(train_labels, test_labels)
+        train_data, test_data = self.normalize_data(train_data, test_data)
+        num_features = len(train_data[0])
+        num_classes = len(train_labels[0])
+        model = Sequential(
+            [
+                tf.keras.Input(shape=(num_features,)),
+                RandomFourierFeatures(
+                    output_dim=4096, scale=10.0, kernel_initializer="gaussian"
+                ),
+                tf.keras.layers.Dense(num_classes),
+            ]
+        )
+        model.compile(
+            optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3),
+            loss=tf.keras.losses.hinge,
+            metrics=[tf.keras.metrics.CategoricalAccuracy(name="acc")],
+        )
 
-        clf = svm.SVC(kernel='poly', C=1, probability=True)
+        history = model.fit(train_data, train_labels, epochs=500, batch_size=512, validation_split=0.2)
+        score, acc = model.evaluate(test_data, test_labels)
+        print('SVM  loss: {}%'.format(round(score * 100, 2)))
+        print('SVM  accuracy: {}%'.format(round(acc * 100, 2)))
+        loss = history.history['loss']
+        val_loss = history.history['val_loss']
 
-        scaler = preprocessing.StandardScaler().fit(X_train)
-        X_scaled = scaler.transform(X_train)
+        epochs = range(1, len(loss) + 1)
 
-        clf.fit(X_scaled, Y_train)
 
-        X_test_scaled = scaler.transform(X_test)
+        plt.plot(epochs, loss, 'b-', label='Training loss')
+        plt.plot(epochs, val_loss, 'r-', label='Validation loss')
+        plt.title('SVM Training and validation loss')
+        plt.xlabel('Epochs')
+        plt.ylabel('Loss')
+        plt.legend()
+        #plt.show()
+        plt.savefig("SVM  loss")
+        plt.clf()
 
-        y_pred = clf.predict(X_test_scaled)
-        print(accuracy_score(Y_test, y_pred))
-        # accuracy, best I got is 0.336 PogChamp
-        print((y_pred == Y_test).sum() / len(Y_test))
+        acc = history.history['acc']
+        val_acc = history.history['val_acc']
+
+        plt.plot(epochs, acc, 'y-', label='Training acc')
+        plt.plot(epochs, val_acc, 'g-', label='Validation acc')
+        plt.title('SVM training and validation accuracy')
+        plt.xlabel('Epochs')
+        plt.ylabel('Accuracy')
+        plt.legend()
+        plt.savefig("SVM accuracy")
+        #plt.show()
+        return
 
     @staticmethod
     def perform_grid_search_logistic_regression(train_data, train_labels, test_data, test_labels):
@@ -154,27 +194,51 @@ class Network:
         train_data, train_labels, test_data, test_labels = self.load_data_numpy(X_train, X_test, Y_train, Y_test)
 
         train_labels, test_labels = self.encode_data(train_labels, test_labels)
-        # train_labels, test_labels = self.one_hot_encode(train_labels, test_labels)
-        train_data, test_data = self.normalize_data(train_data, test_data)
-
-        # To do grid search, just uncomment below
-        # self.perform_grid_search_logistic_regression(train_data, train_labels, test_data, test_labels)
-
-        model = LogisticRegression(solver='newton-cg', penalty='l2', C=1.0)
-        model.fit(train_data, train_labels)
-        print(model.score(test_data, test_labels))
-
-    def linear_regression(self, path):
-        X_train, X_test, Y_train, Y_test = self.load_data_pandas(path)
-        train_data, train_labels, test_data, test_labels = self.load_data_numpy(X_train, X_test, Y_train, Y_test)
-
-        train_labels, test_labels = self.encode_data(train_labels, test_labels)
         train_labels, test_labels = self.one_hot_encode(train_labels, test_labels)
         train_data, test_data = self.normalize_data(train_data, test_data)
+        num_features = len(train_data[0])
+        num_classes = len(train_labels[0])
+        model = Sequential()
+        model.add(tf.keras.layers.Dense(num_classes,
+                        activation='softmax',
+                        kernel_regularizer=L1L2(l1=0.0, l2=0.1),
+                        input_shape=(num_features,)) ) # input dimension = number of features your data has
+        model.compile(optimizer='sgd',
+                      loss='categorical_crossentropy',
+                      metrics=['accuracy'])
+        history = model.fit(train_data, train_labels, epochs=500, validation_split=0.2, batch_size=512)
+        score, acc = model.evaluate(test_data, test_labels)
+        print('Logistic Regression loss: {}%'.format(round(score * 100, 2)))
+        print('Logistic Regression accuracy: {}%'.format(round(acc * 100, 2)))
 
-        model = LinearRegression()
-        model.fit(train_data, train_labels)
-        print(model.score(test_data, test_labels))
+        loss = history.history['loss']
+        val_loss = history.history['val_loss']
+
+        epochs = range(1, len(loss) + 1)
+
+
+        plt.plot(epochs, loss, 'b-', label='Training loss')
+        plt.plot(epochs, val_loss, 'r-', label='Validation loss')
+        plt.title('Logistic regression training and validation loss')
+        plt.xlabel('Epochs')
+        plt.ylabel('Loss')
+        plt.legend()
+        #plt.show()
+        plt.savefig("logistic regression loss")
+        plt.clf()
+
+        acc = history.history['accuracy']
+        val_acc = history.history['val_accuracy']
+
+        plt.plot(epochs, acc, 'y-', label='Training acc')
+        plt.plot(epochs, val_acc, 'g-', label='Validation acc')
+        plt.title('Logistic Regression training and validation accuracy')
+        plt.xlabel('Epochs')
+        plt.ylabel('Accuracy')
+        plt.legend()
+        plt.savefig("logistic regression accuracy")
+        plt.show()
+        return history
 
     def xg_boost(self, path):
         X_train, X_test, Y_train, Y_test = self.load_data_pandas(path)
@@ -211,9 +275,22 @@ class Network:
         #                       nthread=4,
         #                       scale_pos_weight=1,
         #                       seed=27)
-        model.fit(train_data, train_labels)
+        evalset = [(train_data, train_labels), (test_data, test_labels)]
+        model.fit(train_data, train_labels, eval_metric = "mlogloss", eval_set=evalset)
         score = model.score(test_data, test_labels)
         print('XGBoost Score: {}%'.format(round(score * 100, 2)))
+        # retrieve performance metrics
+        results = model.evals_result()
+        # plot learning curves
+        plt.clf()
+        plt.title('XGBoost training and validation loss')
+        plt.plot(results['validation_0']['mlogloss'], label='train')
+        plt.plot(results['validation_1']['mlogloss'], label='test')
+        # show the legend
+        plt.legend()
+        plt.savefig("XGBoost loss")
+        #plt.show()
+        # show the plot
 
     def keras_model(self, path):
         X_train, X_test, Y_train, Y_test = self.load_data_pandas(path)
@@ -232,7 +309,7 @@ class Network:
         # # model.add(tf.keras.layers.Dropout(0.5))
         # model.add(tf.keras.layers.Dense(1, activation=tf.nn.sigmoid))
         # # optimizer = tf.keras.optimizers.Adam(lr=0.01)
-        model = tf.keras.Sequential()
+        model = Sequential()
         model.add(tf.keras.layers.Dense(128, input_shape=(num_features,), activation='relu'))
         model.add(tf.keras.layers.Dense(64, activation='relu'))
         model.add(tf.keras.layers.Dense(num_classes, activation='softmax'))
@@ -254,8 +331,8 @@ class Network:
             # print('Validation Loss: ' + str(val_loss) + '\n\n')
             score, acc = model.evaluate(test_data, test_labels,
                                         batch_size=512)
-            print('Test loss:', score)
-            print('Test accuracy:', acc)
+            print('Fully connected NN Test loss:', score)
+            print('Fully connected NN Test accuracy:', acc)
             if self.save_model:
                 print("Saving trained model..")
                 model_file_name = datetime.datetime.now().strftime('./models/model_'
@@ -264,8 +341,9 @@ class Network:
                 print("Saved successful!")
 
             # Uncomment below to graph model performance
-            # d = Display(proc_time=self.proc_time, history=history, save=False)
-            # d.display_results()
+            d = Display(proc_time=self.proc_time, history=history, save=True)
+            d.display_results()
+            return history
         except ValueError as e:
             logging.exception(e)
 
