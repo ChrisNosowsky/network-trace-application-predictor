@@ -25,6 +25,7 @@ from xgboost import XGBClassifier
 import matplotlib.pyplot as plt
 from keras.regularizers import L1L2
 from tensorflow.keras.layers.experimental import RandomFourierFeatures
+from tensorflow import keras
 from keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
@@ -96,15 +97,15 @@ class Network:
         epochs = range(1, len(loss) + 1)
 
 
-        plt.plot(epochs, loss, 'b-', label='Training loss')
-        plt.plot(epochs, val_loss, 'r-', label='Validation loss')
-        plt.title('SVM Training and validation loss')
-        plt.xlabel('Epochs')
-        plt.ylabel('Loss')
-        plt.legend()
-        #plt.show()
-        plt.savefig("SVM  loss")
-        plt.clf()
+        # plt.plot(epochs, loss, 'b-', label='Training loss')
+        # plt.plot(epochs, val_loss, 'r-', label='Validation loss')
+        # plt.title('SVM Training and validation loss')
+        # plt.xlabel('Epochs')
+        # plt.ylabel('Loss')
+        # plt.legend()
+        # plt.savefig("SVM  loss")
+        # plt.show()
+        # plt.clf()
 
         acc = history.history['acc']
         val_acc = history.history['val_acc']
@@ -116,7 +117,7 @@ class Network:
         plt.ylabel('Accuracy')
         plt.legend()
         plt.savefig("SVM accuracy")
-        #plt.show()
+        plt.show()
         return
 
     def SVM_model2(self, path):
@@ -247,21 +248,21 @@ class Network:
         plt.xlabel('Epochs')
         plt.ylabel('Loss')
         plt.legend()
-        #plt.show()
         plt.savefig("logistic regression loss")
-        plt.clf()
-
-        acc = history.history['accuracy']
-        val_acc = history.history['val_accuracy']
-
-        plt.plot(epochs, acc, 'y-', label='Training acc')
-        plt.plot(epochs, val_acc, 'g-', label='Validation acc')
-        plt.title('Logistic Regression training and validation accuracy')
-        plt.xlabel('Epochs')
-        plt.ylabel('Accuracy')
-        plt.legend()
-        plt.savefig("logistic regression accuracy")
         plt.show()
+        # plt.clf()
+        #
+        # acc = history.history['accuracy']
+        # val_acc = history.history['val_accuracy']
+        #
+        # plt.plot(epochs, acc, 'y-', label='Training acc')
+        # plt.plot(epochs, val_acc, 'g-', label='Validation acc')
+        # plt.title('Logistic Regression training and validation accuracy')
+        # plt.xlabel('Epochs')
+        # plt.ylabel('Accuracy')
+        # plt.legend()
+        # plt.savefig("logistic regression accuracy")
+        # plt.show()
         return history
 
     def logistic_regression2(self, path):
@@ -326,18 +327,6 @@ class Network:
                               scale_pos_weight=1,
                               seed=27)
 
-        # # MAC BEST BELOW
-        # # model = XGBClassifier(learning_rate=0.01,
-        # #                       n_estimators=500,
-        # #                       max_depth=4,
-        # #                       min_child_weight=1,
-        # #                       gamma=1,
-        # #                       subsample=0.8,
-        # #                       colsample_bytree=0.8,
-        # #                       objective='binary:logistic',
-        # #                       nthread=4,
-        # #                       scale_pos_weight=1,
-        # #                       seed=27)
         evalset = [(train_data, train_labels), (test_data, test_labels)]
         model.fit(train_data, train_labels, eval_metric = "mlogloss", eval_set=evalset)
         score = model.score(test_data, test_labels)
@@ -347,17 +336,17 @@ class Network:
         for i, v in enumerate(importance):
             print('Feature: %0d, Score: %.5f' % (i, v))
         # # retrieve performance metrics
-        # results = model.evals_result()
-        # # plot learning curves
-        # plt.clf()
-        # plt.title('XGBoost training and validation loss')
-        # plt.plot(results['validation_0']['mlogloss'], label='train')
-        # plt.plot(results['validation_1']['mlogloss'], label='test')
-        # # show the legend
-        # plt.legend()
-        # plt.savefig("XGBoost loss")
-        # #plt.show()
-        # # show the plot
+        results = model.evals_result()
+        # plot learning curves
+        plt.clf()
+        plt.title('XGBoost training and validation loss')
+        plt.plot(results['validation_0']['mlogloss'], label='train')
+        plt.plot(results['validation_1']['mlogloss'], label='test')
+        # show the legend
+        plt.legend()
+        plt.savefig("XGBoost loss")
+        plt.show()
+        # show the plot
 
     def build_model(self, batch_size, nb_epoch):
         model = Sequential()
@@ -387,6 +376,7 @@ class Network:
         model.add(tf.keras.layers.Dense(256, input_shape=(self.num_features,), activation='relu'))
         model.add(tf.keras.layers.Dense(32, activation='relu'))
         model.add(tf.keras.layers.Dense(self.num_classes, activation='softmax'))
+        opt = keras.optimizers.RMSprop(learning_rate=0.004)
         model.compile(loss='mse', optimizer='rmsprop', metrics=['accuracy'])
 
         try:
@@ -400,12 +390,13 @@ class Network:
 
             history = model.fit(train_data,
                                 train_labels,
+                                validation_split=0.2,
                                 epochs=500,  # Keep low for now
                                 batch_size=512)
             acc = history.history['accuracy'][-1]
-            # val_acc = history.history['val_accuracy'][-1]
-            # loss = history.history['loss'][-1]
-            # val_loss = history.history['val_loss'][-1]
+            val_acc = history.history['val_accuracy'][-1]
+            loss = history.history['loss'][-1]
+            val_loss = history.history['val_loss'][-1]
             print('\n\nTrain Accuracy: ' + str(acc))
             # print('Validation Accuracy: ' + str(val_acc))
             # print('Loss: ' + str(loss))
@@ -422,8 +413,8 @@ class Network:
             #     print("Saved successful!")
             #
             # # Uncomment below to graph model performance
-            # d = Display(proc_time=self.proc_time, history=history, save=True)
-            # d.display_results()
+            d = Display(proc_time=self.proc_time, history=history, save=True)
+            d.display_results()
             # return history
         except ValueError as e:
             logging.exception(e)

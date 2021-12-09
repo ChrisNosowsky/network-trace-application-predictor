@@ -8,6 +8,7 @@
 # Main script to run our application
 # ==============================================================================
 from network import Network
+import numpy as np
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
@@ -15,6 +16,7 @@ if __name__ == '__main__':
     # path = "./data/Master_LTE_PDCP_DL_Stats.xlsx"
     # path = "./data/Master_TEST_LTE_PDCP_UL_Stats.xlsx"
     path = "./data/Master_TEST2_LTE_PDCP_UL_Stats.xlsx"
+    # path = "./data/Master_LTE_PDCP_UL_Stats_Features.xlsx"
     # path = "./data/Master_LTE_PDCP_UL_Stats.xlsx"
     # path = "./data/Master_LTE_RRC_OTA_Packet_updated.xlsx"
     # path = "./data/Master_LTE_MAC_UL_Tx_Statistics.xlsx"
@@ -31,9 +33,9 @@ if __name__ == '__main__':
     n = Network()
     histories = []
     print("========LOGISTIC REGRESSION========")
-    # n.logistic_regression2(path)
+    # n.logistic_regression(path)
     print("========SVM========")
-    # n.SVM_model2(path)
+    # n.SVM_model(path)
     print("========KERAS========")
     dense_history = n.keras_model(path)
     print("========XG BOOST========")

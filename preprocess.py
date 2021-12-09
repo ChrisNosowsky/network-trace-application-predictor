@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # service = ['airbnb', 'doordash']
-shopping = ['Amazon Shopping', 'Walmart', 'McDonalds', 'Macys', 'Zilow', 'doordash', 'airbnb']
+shopping = ['Starbucks', 'Walmart', 'McDonalds', 'Macys', 'Zilow', 'doordash', 'airbnb']
 tools = ['Google Chrome', 'Google Maps', 'Google Play', 'Gmail']
 entertainment = ['Twitch', 'Youtube', 'Imdb']
 social = ['Twitter', 'Snapchat', 'Reddit', 'Pinterest', 'New York Post', 'Linked In']
